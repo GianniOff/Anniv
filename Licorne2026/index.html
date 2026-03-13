@@ -3,127 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pour Louise</title>
+    <title>Joyeux Anniversaire Louise</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@300;400&display=swap');
+        /* Importation de polices douces et élégantes */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Montserrat:wght@300;400&display=swap');
 
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
-            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            background-color: #f0f8ff;
         }
 
-        /* Image de fond avec un voile bleu doux */
-        .background-container {
+        /* Conteneur de l'image de fond avec animation douce */
+        .bg-wrapper {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('dog.jpg') no-repeat center center/cover;
-            z-index: -1;
+            z-index: -2;
+            background-color: #000;
+            overflow: hidden;
         }
 
-        .overlay {
-            position: absolute;
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            background: url('dog.jpg') no-repeat center center/cover;
+            animation: slowZoom 20s infinite alternate;
+        }
+
+        /* Voile bleu très léger pour l'ambiance et la lisibilité */
+        .blue-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(173, 216, 230, 0.3); /* Voile bleu ciel très léger */
-            backdrop-filter: grayscale(20%);
+            background: radial-gradient(circle, rgba(173, 216, 230, 0.2) 0%, rgba(25, 42, 86, 0.4) 100%);
+            z-index: -1;
         }
 
-        /* Carte centrale épurée */
-        .content-box {
-            background: rgba(255, 255, 255, 0.85);
-            padding: 50px;
-            border-radius: 30px;
+        /* Cadre de texte minimaliste */
+        .message-container {
             text-align: center;
-            max-width: 600px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            animation: fadeInOpacity 3s ease-in-out;
+            color: white;
+            padding: 40px;
+            max-width: 500px;
+            /* On garde le fond très transparent pour voir le chien derrière */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            animation: fadeIn 3s ease-out;
         }
 
         h1 {
-            font-family: 'Great Vibes', cursive;
-            font-size: 4rem;
-            color: #5d9cec; /* Bleu doux */
-            margin: 0 0 20px 0;
-        }
-
-        .message {
-            font-size: 1.3rem;
-            color: #4a4a4a;
-            line-height: 1.8;
-            font-style: italic;
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            margin: 0;
+            color: #e0f2ff; /* Bleu très clair glacé */
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .divider {
-            width: 50px;
-            height: 2px;
-            background-color: #add8e6;
-            margin: 30px auto;
+            height: 1px;
+            width: 60px;
+            background: #add8e6;
+            margin: 20px auto;
         }
 
-        .signature {
-            font-size: 1rem;
-            letter-spacing: 2px;
-            color: #88a3ba;
-            text-transform: uppercase;
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
         }
 
-        /* Animation d'apparition douce */
-        @keyframes fadeInOpacity {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
+        .heart-icon {
+            color: #add8e6;
+            font-size: 1.5rem;
+            display: block;
+            margin-top: 10px;
         }
 
-        /* Petit effet de flottement léger */
-        .floating {
-            animation: float 6s ease-in-out infinite;
+        /* Animations */
+        @keyframes slowZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
     </style>
 </head>
 <body>
 
-    <div class="background-container">
-        <div class="overlay"></div>
+    <div class="bg-wrapper">
+        <div class="bg-image"></div>
     </div>
+    
+    <div class="blue-overlay"></div>
 
-    <div class="content-box floating">
-        <h1>Joyeux Anniversaire Louise</h1>
-        
+    <div class="message-container">
+        <h1>Louise</h1>
         <div class="divider"></div>
-        
-        <p class="message">
-            À celle qui illumine nos journées de sa douceur,<br>
-            que cette année soit aussi belle et paisible <br>
-            que les moments passés à tes côtés.
+        <p>
+            Il y a des sourires qui rendent la vie plus douce,<br> 
+            et des regards qui disent tout sans un mot.<br>
+            <br>
+            Que cette nouvelle année t'apporte autant de joie<br>
+            que celle que tu partages avec ceux que tu aimes.
         </p>
-
-        <p class="message" style="font-size: 1.1rem; margin-top: 15px;">
-            Profite de chaque instant, de chaque rire,<br>
-            et de tout l'amour qui t'entoure aujourd'hui.
-        </p>
-
-        <div class="divider"></div>
-
-        <div class="signature">Avec toute mon affection 💙</div>
+        <span class="heart-icon">💙</span>
     </div>
 
 </body>
