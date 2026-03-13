@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyeux Anniversaire Louise</title>
+    <title>Pour ma petite Licorne 🦄</title>
     <style>
-        /* Importation de polices douces et élégantes */
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Montserrat:wght@300;400&display=swap');
 
         body, html {
@@ -18,9 +17,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #0a192f;
         }
 
-        /* Conteneur de l'image de fond avec animation douce */
+        /* Image de fond (le chien) avec animation */
         .bg-wrapper {
             position: fixed;
             top: 0;
@@ -28,82 +28,112 @@
             width: 100%;
             height: 100%;
             z-index: -2;
-            background-color: #000;
-            overflow: hidden;
         }
 
         .bg-image {
             width: 100%;
             height: 100%;
             background: url('dog.jpg') no-repeat center center/cover;
-            animation: slowZoom 20s infinite alternate;
+            animation: slowZoom 20s infinite alternate ease-in-out;
         }
 
-        /* Voile bleu très léger pour l'ambiance et la lisibilité */
+        /* Overlay bleu doux */
         .blue-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(173, 216, 230, 0.2) 0%, rgba(25, 42, 86, 0.4) 100%);
+            background: radial-gradient(circle, rgba(173, 216, 230, 0.1) 0%, rgba(10, 25, 47, 0.6) 100%);
             z-index: -1;
         }
 
-        /* Cadre de texte minimaliste */
+        /* La carte de message */
         .message-container {
             text-align: center;
             color: white;
-            padding: 40px;
-            max-width: 500px;
-            /* On garde le fond très transparent pour voir le chien derrière */
+            padding: 50px 40px;
+            max-width: 450px;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(4px);
-            border-radius: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            animation: fadeIn 3s ease-out;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: fadeIn 2.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Petit effet de reflet magique qui passe sur la carte */
+        .message-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-25deg);
+            animation: shine 6s infinite;
         }
 
         h1 {
             font-family: 'Dancing Script', cursive;
             font-size: 3.5rem;
             margin: 0;
-            color: #e0f2ff; /* Bleu très clair glacé */
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            color: #b3e5fc; 
+            text-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .divider {
             height: 1px;
-            width: 60px;
-            background: #add8e6;
-            margin: 20px auto;
+            width: 80px;
+            background: linear-gradient(to right, transparent, #add8e6, transparent);
+            margin: 25px auto;
         }
 
         p {
-            font-size: 1.1rem;
-            line-height: 1.8;
+            font-size: 1.15rem;
+            line-height: 1.9;
             font-weight: 300;
-            letter-spacing: 0.5px;
-            margin-bottom: 20px;
+            color: #f0f8ff;
+            margin: 0;
+        }
+
+        .highlight {
+            color: #81d4fa;
+            font-weight: 400;
         }
 
         .heart-icon {
-            color: #add8e6;
-            font-size: 1.5rem;
-            display: block;
-            margin-top: 10px;
+            margin-top: 25px;
+            font-size: 1.8rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 5px #add8e6);
+            animation: pulse 2s infinite;
         }
 
         /* Animations */
         @keyframes slowZoom {
             from { transform: scale(1); }
-            to { transform: scale(1.1); }
+            to { transform: scale(1.15); }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shine {
+            10% { left: 150%; }
+            100% { left: 150%; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
 
     </style>
@@ -120,13 +150,13 @@
         <h1>Louise</h1>
         <div class="divider"></div>
         <p>
-            Il y a des sourires qui rendent la vie plus douce,<br> 
-            et des regards qui disent tout sans un mot.<br>
-            <br>
-            Que cette nouvelle année t'apporte autant de joie<br>
-            que celle que tu partages avec ceux que tu aimes.
+            Coucou ma petite licorne 🦄,<br><br>
+            Je n'ai pas de "vrai" cadeau physique à t'offrir, malheureusement...<br><br>
+            Alors mon seul présent, c'est de te dire <span class="highlight">à quel point je t'apprécie</span> (en ami !).
         </p>
-        <span class="heart-icon">💙</span>
+        <div class="divider"></div>
+        <p style="font-size: 1rem; opacity: 0.9;">Joyeux Anniversaire ! 💙</p>
+        <div class="heart-icon">💙</div>
     </div>
 
 </body>
