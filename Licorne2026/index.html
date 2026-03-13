@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyeux Anniversaire Louise !</title>
+    <title>Pour Louise</title>
     <style>
-        /* Importation d'une jolie police */
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@300;400&display=swap');
 
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            font-family: 'Poppins', sans-serif;
+            width: 100%;
+            font-family: 'Quicksand', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            background-color: #f0f8ff;
         }
 
-        /* Image de fond */
-        .background {
+        /* Image de fond avec un voile bleu doux */
+        .background-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -28,108 +29,102 @@
             height: 100%;
             background: url('dog.jpg') no-repeat center center/cover;
             z-index: -1;
-            filter: brightness(0.8);
         }
 
-        /* Conteneur principal (Effet de verre) */
-        .card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 40px;
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(173, 216, 230, 0.3); /* Voile bleu ciel très léger */
+            backdrop-filter: grayscale(20%);
+        }
+
+        /* Carte centrale épurée */
+        .content-box {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 50px;
+            border-radius: 30px;
             text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            max-width: 500px;
-            color: white;
-            animation: fadeIn 2s ease-in-out;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            animation: fadeInOpacity 3s ease-in-out;
         }
 
         h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            color: #add8e6; /* Bleu clair */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 10px;
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+            color: #5d9cec; /* Bleu doux */
+            margin: 0 0 20px 0;
         }
 
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
+        .message {
+            font-size: 1.3rem;
+            color: #4a4a4a;
+            line-height: 1.8;
+            font-style: italic;
         }
 
-        /* Bouton interactif */
-        .btn-surprise {
-            margin-top: 25px;
-            padding: 12px 30px;
-            background: #0077be;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
+        .divider {
+            width: 50px;
+            height: 2px;
+            background-color: #add8e6;
+            margin: 30px auto;
+        }
+
+        .signature {
             font-size: 1rem;
-            font-weight: 600;
-            transition: transform 0.3s, background 0.3s;
+            letter-spacing: 2px;
+            color: #88a3ba;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .btn-surprise:hover {
-            background: #00aaff;
-            transform: scale(1.1);
+        /* Animation d'apparition douce */
+        @keyframes fadeInOpacity {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        /* Animation de flottement pour les petits coeurs bleus */
-        .heart {
-            position: absolute;
-            color: #00d4ff;
-            font-size: 20px;
-            user-select: none;
-            pointer-events: none;
-            animation: float 4s linear infinite;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Petit effet de flottement léger */
+        .floating {
+            animation: float 6s ease-in-out infinite;
         }
 
         @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
     </style>
 </head>
 <body>
 
-    <div class="background"></div>
-
-    <div class="card">
-        <h1>Joyeux Anniversaire Louise !</h1>
-        <p>Aujourd'hui est une journée spéciale, tout comme toi. 💙</p>
-        <p>Que cette année soit remplie de bonheur, de rires et de moments inoubliables (et de beaucoup de chiens !).</p>
-        
-        <button class="btn-surprise" onclick="createHearts()">Clique pour une surprise !</button>
+    <div class="background-container">
+        <div class="overlay"></div>
     </div>
 
-    <script>
-        function createHearts() {
-            for (let i = 0; i < 15; i++) {
-                const heart = document.createElement('div');
-                heart.classList.add('heart');
-                heart.innerHTML = '💙';
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
-                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                document.body.appendChild(heart);
+    <div class="content-box floating">
+        <h1>Joyeux Anniversaire Louise</h1>
+        
+        <div class="divider"></div>
+        
+        <p class="message">
+            À celle qui illumine nos journées de sa douceur,<br>
+            que cette année soit aussi belle et paisible <br>
+            que les moments passés à tes côtés.
+        </p>
 
-                setTimeout(() => {
-                    heart.remove();
-                }, 4000);
-            }
-            alert("Passe une journée magique Louise ! ✨");
-        }
-    </script>
+        <p class="message" style="font-size: 1.1rem; margin-top: 15px;">
+            Profite de chaque instant, de chaque rire,<br>
+            et de tout l'amour qui t'entoure aujourd'hui.
+        </p>
+
+        <div class="divider"></div>
+
+        <div class="signature">Avec toute mon affection 💙</div>
+    </div>
+
 </body>
 </html>
