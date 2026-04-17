@@ -1,12 +1,142 @@
-<script>
-        // La liste originale de tes emojis
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portrait de Mumu</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #fff5f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(214, 51, 132, 0.15);
+            max-width: 450px;
+            width: 90%;
+        }
+
+        h1 { color: #d63384; margin-bottom: 10px; }
+        .info { margin-bottom: 25px; font-size: 0.95rem; color: #666; height: 1.2em; }
+
+        .slots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            background: #222;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 4px solid #ffd700;
+        }
+
+        .slot-window {
+            width: 80px;
+            height: 100px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .reel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            width: 100%;
+            /* L'animation est gérée dynamiquement en Javascript */
+        }
+
+        .item {
+            height: 100px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            line-height: 100px;
+            overflow: hidden;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        button {
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #spinBtn {
+            background: #d63384;
+            color: white;
+            box-shadow: 0 4px 0 #a02663;
+        }
+
+        #spinBtn:disabled { 
+            background: #bdc3c7; 
+            box-shadow: none; 
+            cursor: not-allowed;
+            color: #7f8c8d;
+        }
+
+        .link-back {
+            color: #d63384;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Mumu 2026 ✨</h1>
+        <p id="status" class="info">Découvre les emojis qui la représentent !</p>
+
+        <div class="slots">
+            <div class="slot-window"><div id="r1" class="reel"></div></div>
+            <div class="slot-window"><div id="r2" class="reel"></div></div>
+            <div class="slot-window"><div id="r3" class="reel"></div></div>
+        </div>
+
+        <div class="btn-group">
+            <button id="spinBtn" onclick="jouer()">DÉCOUVRIR</button>
+            <a href="https://giannioff.github.io/Anniv/Mumu2026/" class="link-back">⬅ Retour au site</a>
+        </div>
+    </div>
+
+    <script>
+        // La liste de tes emojis
         const trios = [
             ['🤶🏻', '🌺', '♉️'], 
             ['🥧', '🐬', '🕊️'],
             ['⚡', '🔁', '❤️']
         ];
 
-        // On crée une "pioche" dans laquelle on va retirer les trios au fur et à mesure
+        // La pioche pour éviter les doublons
         let triosDisponibles = [...trios]; 
 
         const reels = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3')];
@@ -34,54 +164,57 @@
                 // On prend un trio au hasard parmi ceux qui RESTENT
                 const randomIndex = Math.floor(Math.random() * triosDisponibles.length);
                 resultat = triosDisponibles[randomIndex];
-                // On le retire de la liste pour ne plus jamais tomber dessus
+                // On le retire de la liste
                 triosDisponibles.splice(randomIndex, 1);
             } else {
-                // S'il n'y a plus aucun trio dispo, c'est le 4ème clic : le mot de la fin
+                // S'il n'y a plus aucun trio dispo, on affiche la fin
                 resultat = ['F', 'I', 'N'];
                 estLaFin = true;
             }
 
             reels.forEach((reel, i) => {
+                // On récupère le dernier élément affiché pour ne pas avoir de coupure visuelle
                 const currentItems = reel.querySelectorAll('.item');
                 const lastItemText = currentItems.length > 0 ? currentItems[currentItems.length - 1].innerHTML : '❓';
 
                 let html = `<div class="item">${lastItemText}</div>`;
                 
+                // On génère le ruban
                 const spinCount = 15 + (i * 5);
                 for(let j=0; j<spinCount; j++) {
-                    // Pour le flou de l'animation, on pioche dans tous les emojis
                     const randomTrio = trios[Math.floor(Math.random() * trios.length)];
                     html += `<div class="item">${randomTrio[i]}</div>`;
                 }
                 
+                // On place le vrai résultat à la fin
                 html += `<div class="item">${resultat[i]}</div>`;
                 
+                // Réinitialisation de la position sans animation
                 reel.style.transition = 'none';
                 reel.style.transform = 'translateY(0px)';
                 reel.innerHTML = html;
 
+                // Force le navigateur à appliquer les changements immédiatement
                 void reel.offsetWidth; 
 
+                // Lancement de l'animation
                 const duration = 1.5 + (i * 0.5); 
                 reel.style.transition = `transform ${duration}s cubic-bezier(0.25, 0.1, 0.25, 1)`;
 
                 const stopPos = (spinCount + 1) * 100;
                 reel.style.transform = `translateY(-${stopPos}px)`;
 
+                // Gérer le texte quand le dernier rouleau s'arrête
                 if (i === 2) {
                     setTimeout(() => {
-                        // Mise à jour des textes en fonction de ce qu'il reste dans la pioche
                         if (estLaFin) {
                             statusText.textContent = "C'est fini ! Joyeux Anniversaire !";
                             btn.textContent = "TERMINÉ";
                         } else if (triosDisponibles.length === 0) {
-                            // Les 3 trios ont été vus, on prépare le terrain pour "FIN"
                             btn.disabled = false;
                             statusText.textContent = "Plus qu'une surprise à découvrir...";
                             btn.textContent = "MOT DE LA FIN";
                         } else {
-                            // Il reste 1 ou 2 trios
                             btn.disabled = false;
                             const s = triosDisponibles.length > 1 ? "s" : "";
                             statusText.textContent = `Encore ${triosDisponibles.length} découverte${s} possible${s}...`;
@@ -91,5 +224,8 @@
             });
         }
 
+        // Lancer l'initialisation au chargement
         init();
     </script>
+</body>
+</html>
