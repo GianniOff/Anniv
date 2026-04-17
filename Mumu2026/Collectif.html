@@ -6,15 +6,15 @@
     <title>Portrait de Mumu</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #fdf0f6;
+            font-family: 'Segoe UI', sans-serif;
+            background: #fff5f8;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            color: #4a4a4a;
+            color: #333;
         }
 
         .container {
@@ -22,32 +22,32 @@
             background: white;
             padding: 40px;
             border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(214, 51, 132, 0.15);
+            max-width: 450px;
             width: 90%;
         }
 
         h1 { color: #d63384; margin-bottom: 10px; }
-        .description { margin-bottom: 30px; font-style: italic; color: #888; }
+        .info { margin-bottom: 25px; font-size: 0.95rem; color: #666; }
 
         /* Slots */
         .slots {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            background: #333;
+            gap: 12px;
+            background: #222;
             padding: 20px;
             border-radius: 20px;
             margin-bottom: 30px;
-            border: 5px solid #ffc107;
+            border: 4px solid #ffd700;
         }
 
         .slot-window {
             width: 80px;
             height: 100px;
             background: white;
-            border-radius: 10px;
-            overflow: hidden; /* Cache les emojis qui défilent */
+            border-radius: 8px;
+            overflow: hidden;
             position: relative;
         }
 
@@ -58,59 +58,67 @@
             position: absolute;
             width: 100%;
             top: 0;
-            transition: top 0.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+            /* Transition fluide pour l'arrêt */
+            transition: top 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
-        .emoji-item {
+        .item {
             height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3.5rem;
+            font-size: 3rem;
+            font-weight: bold;
             flex-shrink: 0;
         }
 
         /* Boutons */
-        .buttons {
+        .btn-group {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
         button {
-            padding: 15px 30px;
+            padding: 16px 32px;
             font-size: 1.1rem;
             font-weight: bold;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s, background 0.3s;
+            transition: all 0.3s;
         }
 
-        .btn-spin {
+        #spinBtn {
             background: #d63384;
             color: white;
-            box-shadow: 0 5px 0 #a02663;
+            box-shadow: 0 4px 0 #a02663;
         }
 
-        .btn-spin:active { transform: translateY(3px); box-shadow: none; }
-        .btn-spin:disabled { background: #ccc; box-shadow: none; cursor: wait; }
+        #spinBtn:hover:not(:disabled) { background: #e83e8c; }
+        #spinBtn:active:not(:disabled) { transform: translateY(3px); box-shadow: none; }
+        
+        #spinBtn:disabled { 
+            background: #bdc3c7; 
+            box-shadow: none; 
+            cursor: not-allowed;
+            color: #7f8c8d;
+        }
 
-        .btn-back {
-            background: transparent;
+        .link-back {
             color: #d63384;
-            border: 2px solid #d63384;
             text-decoration: none;
-            display: inline-block;
             font-size: 0.9rem;
+            font-weight: 600;
+            padding: 10px;
         }
 
-        /* Animation de rotation rapide */
+        /* Animation de rotation */
         .spinning {
-            animation: scrollDown 0.1s linear infinite;
+            animation: scrollLoop 0.1s linear infinite;
         }
 
-        @keyframes scrollDown {
+        @keyframes scrollLoop {
             from { transform: translateY(0); }
             to { transform: translateY(-200px); }
         }
@@ -119,94 +127,82 @@
 <body>
 
     <div class="container">
-        <h1>✨ Les Facettes de Mumu ✨</h1>
-        <p class="description">Chaque clic affiche 3 emojis qui la représentent !</p>
+        <h1>Mumu 2026 ✨</h1>
+        <p id="status" class="info">Découvre les 3 emojis qui la représentent !</p>
 
         <div class="slots">
-            <div class="slot-window"><div id="reel1" class="reel"></div></div>
-            <div class="slot-window"><div id="reel2" class="reel"></div></div>
-            <div class="slot-window"><div id="reel3" class="reel"></div></div>
+            <div class="slot-window"><div id="r1" class="reel"></div></div>
+            <div class="slot-window"><div id="r2" class="reel"></div></div>
+            <div class="slot-window"><div id="r3" class="reel"></div></div>
         </div>
 
-        <div class="buttons">
-            <button class="btn-spin" id="spinBtn" onclick="lancerDefilement()">DÉCOUVRIR</button>
-            <a href="https://giannioff.github.io/Anniv/Mumu2026/" class="btn-back">⬅ Retour vers le site</a>
+        <div class="btn-group">
+            <button id="spinBtn" onclick="jouer()">DÉCOUVRIR</button>
+            <a href="https://giannioff.github.io/Anniv/Mumu2026/" class="link-back">⬅ Retour au site</a>
         </div>
     </div>
 
     <script>
-        // --- TES TRIOS D'EMOJIS ---
-        const collections = [
-            ['🎨', '👩‍🎨', '🌈'],
-            ['🍕', '🍷', '😋'],
-            ['🎮', '🎧', '⚡'],
-            ['✈️', '🌍', '📸'],
-            ['🎂', '🎁', '🥳'],
-            ['🐱', '🧶', '💖'],
-            ['📖', '☕', '🕯️'],
-            ['🏃‍♀️', '🔥', '💪']
+        const trios = [
+            ['🎨', '👩‍🎨', '🌈'], ['🍕', '🍷', '😋'],
+            ['🎮', '🎧', '⚡'], ['✈️', '🌍', '📸'],
+            ['🐱', '🧶', '💖'], ['📖', '☕', '🕯️']
         ];
 
-        const reels = [
-            document.getElementById('reel1'),
-            document.getElementById('reel2'),
-            document.getElementById('reel3')
-        ];
-        
-        let dernierIndex = -1;
+        let clics = 0;
+        const maxClics = 5; // Le message "FIN" apparaîtra au 5ème clic
+        const reels = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3')];
 
-        // Préparation initiale des colonnes
-        function initialiser() {
-            reels.forEach(reel => {
-                reel.innerHTML = '<div class="emoji-item">✨</div>';
-            });
-        }
+        // Initialisation
+        reels.forEach(r => r.innerHTML = '<div class="item">❓</div>');
 
-        function lancerDefilement() {
+        function jouer() {
             const btn = document.getElementById('spinBtn');
-            btn.disabled = true;
-
-            // 1. Choisir un nouveau trio au hasard (différent du précédent)
-            let index;
-            do {
-                index = Math.floor(Math.random() * collections.length);
-            } while (index === dernierIndex);
-            dernierIndex = index;
+            const statusText = document.getElementById('status');
+            clics++;
             
-            const trioGagnant = collections[index];
+            btn.disabled = true;
+            let estLaFin = (clics >= maxClics);
 
-            // 2. Lancer l'animation pour chaque colonne
+            // Déterminer le résultat
+            const resultat = estLaFin ? ['F', 'I', 'N'] : trios[Math.floor(Math.random() * trios.length)];
+
             reels.forEach((reel, i) => {
-                // On remplit la colonne avec plein d'emojis pour l'effet de vitesse
-                let content = '';
-                for(let j=0; j<10; j++) {
-                    content += `<div class="emoji-item">${collections[Math.floor(Math.random()*collections.length)][i]}</div>`;
+                // Création d'un long ruban pour l'effet de défilement
+                let html = '';
+                for(let j=0; j<12; j++) {
+                    const randomEmoji = trios[Math.floor(Math.random()*trios.length)][i];
+                    html += `<div class="item">${randomEmoji}</div>`;
                 }
-                // On finit par l'emoji final
-                content += `<div class="emoji-item">${trioGagnant[i]}</div>`;
-                reel.innerHTML = content;
-                
-                // On ajoute la classe d'animation
+                html += `<div class="item">${resultat[i]}</div>`;
+                reel.innerHTML = html;
+                reel.style.top = "0px";
                 reel.classList.add('spinning');
             });
 
-            // 3. Arrêt séquentiel (l'un après l'autre)
+            // Arrêt séquentiel
             reels.forEach((reel, i) => {
                 setTimeout(() => {
                     reel.classList.remove('spinning');
-                    // On place le ruban tout en bas sur le dernier emoji
                     const offset = (reel.children.length - 1) * 100;
                     reel.style.top = `-${offset}px`;
 
-                    // Si c'est le dernier emoji, on réactive le bouton
+                    // Si c'est le dernier reel à s'arrêter
                     if (i === 2) {
-                        setTimeout(() => { btn.disabled = false; }, 500);
+                        setTimeout(() => {
+                            if (estLaFin) {
+                                statusText.textContent = "C'est fini ! Joyeux Anniversaire !";
+                                btn.textContent = "TERMINÉ";
+                                // Le bouton reste grisé (disabled)
+                            } else {
+                                btn.disabled = false;
+                                statusText.textContent = `Encore ${maxClics - clics} découvertes possibles...`;
+                            }
+                        }, 800);
                     }
-                }, 1000 + (i * 600)); // 1s pour le premier, 1.6s pour le 2e, 2.2s pour le 3e
+                }, 1000 + (i * 600)); 
             });
         }
-
-        initialiser();
     </script>
 </body>
 </html>
