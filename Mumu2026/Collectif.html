@@ -56,8 +56,7 @@
             align-items: center;
             position: absolute;
             width: 100%;
-            top: 0;
-            transition: top 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+            /* La transition est maintenant gérée dynamiquement en Javascript */
         }
 
         .item {
@@ -69,7 +68,6 @@
             font-size: 3rem;
             font-weight: bold;
             flex-shrink: 0;
-            /* Empêche les emojis de déborder ou de casser la ligne */
             line-height: 100px;
             overflow: hidden;
         }
@@ -110,15 +108,6 @@
             font-weight: 600;
             padding: 10px;
         }
-
-        .spinning {
-            animation: scrollLoop 0.1s linear infinite;
-        }
-
-        @keyframes scrollLoop {
-            from { transform: translateY(0); }
-            to { transform: translateY(-200px); }
-        }
     </style>
 </head>
 <body>
@@ -140,7 +129,6 @@
     </div>
 
     <script>
-        // Tes emojis mis à jour (le 1 a été remplacé par un emoji plus standard pour éviter les bugs d'affichage)
         const trios = [
             ['🤶🏻', '🌺', '♉️'], 
             ['🥧', '🐬', '🕊️'],
@@ -151,11 +139,10 @@
         const maxClics = 4; 
         const reels = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3')];
 
-        // Initialisation propre
         function init() {
             reels.forEach(r => {
                 r.innerHTML = '<div class="item">❓</div>';
-                r.style.top = "0px";
+                r.style.transform = "translateY(0px)";
             });
         }
 
@@ -167,48 +154,53 @@
             btn.disabled = true;
             let estLaFin = (clics >= maxClics);
 
-            // Choix du résultat final
             const resultat = estLaFin ? ['F', 'I', 'N'] : trios[Math.floor(Math.random() * trios.length)];
 
             reels.forEach((reel, i) => {
-                // On vide et on reconstruit le ruban
-                let html = '';
-                // On crée 15 items aléatoires pour l'effet visuel de défilement
-                for(let j=0; j<15; j++) {
+                // On récupère le dernier élément affiché pour ne pas avoir de coupure visuelle
+                const currentItems = reel.querySelectorAll('.item');
+                const lastItemText = currentItems.length > 0 ? currentItems[currentItems.length - 1].innerHTML : '❓';
+
+                let html = `<div class="item">${lastItemText}</div>`;
+                
+                // On génère le ruban (chaque rouleau a un peu plus d'items pour s'arrêter après le précédent)
+                const spinCount = 15 + (i * 5);
+                for(let j=0; j<spinCount; j++) {
                     const randomTrio = trios[Math.floor(Math.random() * trios.length)];
                     html += `<div class="item">${randomTrio[i]}</div>`;
                 }
-                // On ajoute le résultat final à la toute fin du ruban
+                
+                // On place le vrai résultat tout à la fin
                 html += `<div class="item">${resultat[i]}</div>`;
                 
+                // 1. On réinitialise la position en haut, SANS animation
+                reel.style.transition = 'none';
+                reel.style.transform = 'translateY(0px)';
                 reel.innerHTML = html;
-                reel.classList.remove('spinning'); // Reset animation
-                void reel.offsetWidth; // Force le refresh du DOM
-                reel.style.top = "0px";
-                reel.classList.add('spinning');
-            });
 
-            // Arrêt séquentiel
-            reels.forEach((reel, i) => {
-                setTimeout(() => {
-                    reel.classList.remove('spinning');
-                    // On calcule dynamiquement la position pour s'arrêter pile sur le dernier item
-                    const totalItems = reel.querySelectorAll('.item').length;
-                    const stopPos = (totalItems - 1) * 100;
-                    reel.style.top = `-${stopPos}px`;
+                // 2. On force le navigateur à calculer le changement immédiatement (Reflow)
+                void reel.offsetWidth; 
 
-                    if (i === 2) {
-                        setTimeout(() => {
-                            if (estLaFin) {
-                                statusText.textContent = "C'est fini ! Joyeux Anniversaire !";
-                                btn.textContent = "TERMINÉ";
-                            } else {
-                                btn.disabled = false;
-                                statusText.textContent = `Encore ${maxClics - clics} découvertes possibles...`;
-                            }
-                        }, 800);
-                    }
-                }, 1000 + (i * 600)); 
+                // 3. On active l'animation (la durée augmente pour chaque rouleau)
+                const duration = 1.5 + (i * 0.5); // 1.5s, 2.0s, 2.5s
+                reel.style.transition = `transform ${duration}s cubic-bezier(0.25, 0.1, 0.25, 1)`;
+
+                // 4. On lance la descente du ruban
+                const stopPos = (spinCount + 1) * 100;
+                reel.style.transform = `translateY(-${stopPos}px)`;
+
+                // Gérer le texte et le bouton quand le TOUT DERNIER rouleau s'arrête
+                if (i === 2) {
+                    setTimeout(() => {
+                        if (estLaFin) {
+                            statusText.textContent = "C'est fini ! Joyeux Anniversaire !";
+                            btn.textContent = "TERMINÉ";
+                        } else {
+                            btn.disabled = false;
+                            statusText.textContent = `Encore ${maxClics - clics} découvertes possibles...`;
+                        }
+                    }, duration * 1000 + 100); // délai de l'animation + 100ms de sécurité
+                }
             });
         }
 
