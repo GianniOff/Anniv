@@ -18,7 +18,7 @@
         body {
             font-family: 'Fredoka', sans-serif;
             background-color: var(--bg-color);
-            /* Motif papier cadeau plus élégant */
+            /* Motif papier cadeau élégant */
             background-image: 
                 radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.5) 0%, transparent 80%),
                 repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 71, 126, 0.05) 35px, rgba(255, 71, 126, 0.05) 70px);
@@ -31,7 +31,7 @@
             overflow: hidden;
         }
 
-        /* Rubans du cadeau en arrière-plan */
+        /* Rubans du cadeau croisés en arrière-plan */
         .ribbon-v { position: fixed; top: 0; left: 50%; width: 60px; height: 100%; background: var(--primary-pink); transform: translateX(-50%); z-index: -1; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
         .ribbon-h { position: fixed; top: 50%; left: 0; width: 100%; height: 60px; background: var(--dark-pink); transform: translateY(-50%); z-index: -1; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
 
@@ -78,6 +78,10 @@
             color: #6a0d2f; 
             font-weight: 500;
             line-height: 1.4;
+            height: 3em; /* Fixe la hauteur pour éviter les sauts de mise en page */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .slots-outer {
@@ -107,7 +111,7 @@
             border: 1px solid #ddd;
         }
 
-        /* Reflet sur les vitres */
+        /* Effet reflet sur le verre des rouleaux */
         .slot-window::after {
             content: '';
             position: absolute;
@@ -136,6 +140,13 @@
             filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
         }
 
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
         button {
             padding: 20px 40px;
             font-size: 1.4rem;
@@ -158,7 +169,7 @@
         }
 
         #spinBtn:hover:not(:disabled) {
-            transform: scale(1.02);
+            transform: scale(1.05);
             filter: brightness(1.1);
         }
 
@@ -172,20 +183,22 @@
             box-shadow: 0 8px 0 #7f8c8d; 
             color: #ecf0f1;
             top: 0;
+            cursor: not-allowed;
         }
 
         .link-back {
-            margin-top: 20px;
+            margin-top: 15px;
             color: var(--dark-pink);
             text-decoration: none;
             font-weight: 600;
             opacity: 0.7;
             transition: 0.3s;
+            font-size: 1rem;
         }
 
-        .link-back:hover { opacity: 1; }
+        .link-back:hover { opacity: 1; transform: translateX(-5px); }
 
-        /* Animation Sparkles */
+        /* Animation Sparkles scintillants */
         .sparkle {
             position: absolute;
             pointer-events: none;
@@ -207,6 +220,7 @@
 
     <div class="container">
         <h1>Mumu 2026</h1>
+        
         <p id="status" class="info">Appuie pour découvrir les facettes <br>de ta personnalité ! ✨</p>
 
         <div class="slots-outer">
@@ -218,7 +232,7 @@
         </div>
 
         <div class="btn-group">
-            <button id="spinBtn" onclick="jouer()">Ouvrir le cadeau !</button><br>
+            <button id="spinBtn" onclick="jouer()">Ouvrir le cadeau !</button>
             <a href="https://giannioff.github.io/Anniv/Mumu2026/" class="link-back">⬅ Retour à la fête</a>
         </div>
     </div>
@@ -241,7 +255,7 @@
             triosDisponibles = [...trios]; 
         }
 
-        // Créer des particules de temps en temps
+        // Système de paillettes aléatoires
         function createSparkle() {
             const s = document.createElement('div');
             s.className = 'sparkle';
@@ -252,7 +266,7 @@
             document.body.appendChild(s);
             setTimeout(() => s.remove(), 4000);
         }
-        setInterval(createSparkle, 500);
+        setInterval(createSparkle, 600);
 
         function jouer() {
             const btn = document.getElementById('spinBtn');
@@ -305,7 +319,7 @@
                             btn.disabled = false;
                             const s = triosDisponibles.length > 1 ? "s" : "";
                             statusText.innerHTML = `Encore <strong>${triosDisponibles.length}</strong> secret${s} à découvrir...`;
-                            if(triosDisponibles.length === 0) btn.textContent = "Dernière surprise !";
+                            if(triosDisponibles.length === 0) btn.textContent = "Dernier secret !";
                         }
                     }, duration * 1000 + 200); 
                 }
