@@ -28,9 +28,8 @@
         }
 
         h1 { color: #d63384; margin-bottom: 10px; }
-        .info { margin-bottom: 25px; font-size: 0.95rem; color: #666; }
+        .info { margin-bottom: 25px; font-size: 0.95rem; color: #666; height: 1.2em; }
 
-        /* Slots */
         .slots {
             display: flex;
             justify-content: center;
@@ -58,21 +57,23 @@
             position: absolute;
             width: 100%;
             top: 0;
-            /* Transition fluide pour l'arrêt */
             transition: top 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
         .item {
             height: 100px;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 3rem;
             font-weight: bold;
             flex-shrink: 0;
+            /* Empêche les emojis de déborder ou de casser la ligne */
+            line-height: 100px;
+            overflow: hidden;
         }
 
-        /* Boutons */
         .btn-group {
             display: flex;
             flex-direction: column;
@@ -95,9 +96,6 @@
             box-shadow: 0 4px 0 #a02663;
         }
 
-        #spinBtn:hover:not(:disabled) { background: #e83e8c; }
-        #spinBtn:active:not(:disabled) { transform: translateY(3px); box-shadow: none; }
-        
         #spinBtn:disabled { 
             background: #bdc3c7; 
             box-shadow: none; 
@@ -113,7 +111,6 @@
             padding: 10px;
         }
 
-        /* Animation de rotation */
         .spinning {
             animation: scrollLoop 0.1s linear infinite;
         }
@@ -143,17 +140,24 @@
     </div>
 
     <script>
+        // Tes emojis mis à jour (le 1 a été remplacé par un emoji plus standard pour éviter les bugs d'affichage)
         const trios = [
-            ['🤶🏻', '🌺', '♉️'], ['🥧', '🐬', '🕊️'],
-            ['⚡​', '🔁​', '❤️​']
+            ['🤶🏻', '🌺', '♉️'], 
+            ['🥧', '🐬', '🕊️'],
+            ['⚡', '🔁', '❤️']
         ];
 
         let clics = 0;
-        const maxClics = 5; // Le message "FIN" apparaîtra au 5ème clic
+        const maxClics = 5; 
         const reels = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3')];
 
-        // Initialisation
-        reels.forEach(r => r.innerHTML = '<div class="item">❓</div>');
+        // Initialisation propre
+        function init() {
+            reels.forEach(r => {
+                r.innerHTML = '<div class="item">❓</div>';
+                r.style.top = "0px";
+            });
+        }
 
         function jouer() {
             const btn = document.getElementById('spinBtn');
@@ -163,18 +167,23 @@
             btn.disabled = true;
             let estLaFin = (clics >= maxClics);
 
-            // Déterminer le résultat
+            // Choix du résultat final
             const resultat = estLaFin ? ['F', 'I', 'N'] : trios[Math.floor(Math.random() * trios.length)];
 
             reels.forEach((reel, i) => {
-                // Création d'un long ruban pour l'effet de défilement
+                // On vide et on reconstruit le ruban
                 let html = '';
-                for(let j=0; j<12; j++) {
-                    const randomEmoji = trios[Math.floor(Math.random()*trios.length)][i];
-                    html += `<div class="item">${randomEmoji}</div>`;
+                // On crée 15 items aléatoires pour l'effet visuel de défilement
+                for(let j=0; j<15; j++) {
+                    const randomTrio = trios[Math.floor(Math.random() * trios.length)];
+                    html += `<div class="item">${randomTrio[i]}</div>`;
                 }
+                // On ajoute le résultat final à la toute fin du ruban
                 html += `<div class="item">${resultat[i]}</div>`;
+                
                 reel.innerHTML = html;
+                reel.classList.remove('spinning'); // Reset animation
+                void reel.offsetWidth; // Force le refresh du DOM
                 reel.style.top = "0px";
                 reel.classList.add('spinning');
             });
@@ -183,16 +192,16 @@
             reels.forEach((reel, i) => {
                 setTimeout(() => {
                     reel.classList.remove('spinning');
-                    const offset = (reel.children.length - 1) * 100;
-                    reel.style.top = `-${offset}px`;
+                    // On calcule dynamiquement la position pour s'arrêter pile sur le dernier item
+                    const totalItems = reel.querySelectorAll('.item').length;
+                    const stopPos = (totalItems - 1) * 100;
+                    reel.style.top = `-${stopPos}px`;
 
-                    // Si c'est le dernier reel à s'arrêter
                     if (i === 2) {
                         setTimeout(() => {
                             if (estLaFin) {
                                 statusText.textContent = "C'est fini ! Joyeux Anniversaire !";
                                 btn.textContent = "TERMINÉ";
-                                // Le bouton reste grisé (disabled)
                             } else {
                                 btn.disabled = false;
                                 statusText.textContent = `Encore ${maxClics - clics} découvertes possibles...`;
@@ -202,6 +211,8 @@
                 }, 1000 + (i * 600)); 
             });
         }
+
+        init();
     </script>
 </body>
 </html>
