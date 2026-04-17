@@ -3,153 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyeux Anniversaire Mumu ❗​</title>
+    <title>Portrait de Mumu</title>
     <style>
-        :root {
-            --emoji-size: 80px;
-            --trio-width: 260px; /* Largeur d'un groupe de 3 */
-        }
-
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #1a1a1a;
-            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fdf0f6;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            overflow: hidden;
+            color: #4a4a4a;
         }
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 40px;
-            color: #ffde59;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
         }
 
-        /* Le cadre qui cache ce qui dépasse */
-        .window {
-            width: var(--trio-width);
-            height: 100px;
-            border: 4px solid #ffde59;
-            border-radius: 15px;
-            position: relative;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 20px rgba(255, 222, 89, 0.3);
-        }
+        h1 { color: #d63384; margin-bottom: 10px; }
+        .description { margin-bottom: 30px; font-style: italic; color: #888; }
 
-        /* Le ruban qui contient tous les emojis */
-        .ribbon {
+        /* Slots */
+        .slots {
             display: flex;
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            transition: transform 3s cubic-bezier(0.15, 0, 0.15, 1); /* Effet de freinage fluide */
-            will-change: transform;
+            justify-content: center;
+            gap: 15px;
+            background: #333;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 5px solid #ffc107;
         }
 
-        .trio {
+        .slot-window {
+            width: 80px;
+            height: 100px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden; /* Cache les emojis qui défilent */
+            position: relative;
+        }
+
+        .reel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            transition: top 0.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        .emoji-item {
+            height: 100px;
             display: flex;
             align-items: center;
-            justify-content: space-around;
-            width: var(--trio-width);
-            font-size: 3rem;
+            justify-content: center;
+            font-size: 3.5rem;
             flex-shrink: 0;
         }
 
+        /* Boutons */
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
         button {
-            margin-top: 50px;
-            padding: 15px 40px;
-            font-size: 1.2rem;
+            padding: 15px 30px;
+            font-size: 1.1rem;
             font-weight: bold;
-            text-transform: uppercase;
-            color: #1a1a1a;
-            background: #ffde59;
             border: none;
-            border-radius: 8px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: transform 0.2s, background 0.3s;
         }
 
-        button:hover {
-            background: #fff;
-            transform: scale(1.05);
+        .btn-spin {
+            background: #d63384;
+            color: white;
+            box-shadow: 0 5px 0 #a02663;
         }
 
-        button:disabled {
-            background: #555;
-            cursor: not-allowed;
+        .btn-spin:active { transform: translateY(3px); box-shadow: none; }
+        .btn-spin:disabled { background: #ccc; box-shadow: none; cursor: wait; }
+
+        .btn-back {
+            background: transparent;
+            color: #d63384;
+            border: 2px solid #d63384;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        /* Animation de rotation rapide */
+        .spinning {
+            animation: scrollDown 0.1s linear infinite;
+        }
+
+        @keyframes scrollDown {
+            from { transform: translateY(0); }
+            to { transform: translateY(-200px); }
         }
     </style>
 </head>
 <body>
 
-    <h1>✨ Portrait de [Prénom] ✨</h1>
+    <div class="container">
+        <h1>✨ Les Facettes de Mumu ✨</h1>
+        <p class="description">Chaque clic affiche 3 emojis qui la représentent !</p>
 
-    <div class="window">
-        <div id="ribbon" class="ribbon">
-            </div>
+        <div class="slots">
+            <div class="slot-window"><div id="reel1" class="reel"></div></div>
+            <div class="slot-window"><div id="reel2" class="reel"></div></div>
+            <div class="slot-window"><div id="reel3" class="reel"></div></div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn-spin" id="spinBtn" onclick="lancerDefilement()">DÉCOUVRIR</button>
+            <a href="https://giannioff.github.io/Anniv/Mumu2026/" class="btn-back">⬅ Retour vers le site</a>
+        </div>
     </div>
 
-    <button id="spinBtn" onclick="startScroll()">Lancer le défilé</button>
-
     <script>
-        // --- TES COMBINAISONS D'EMOJIS (TRIOS) ---
-        const mesTrios = [
-            ['🍕', '🎮', '😴'],
-            ['🎸', '🎧', '🤘'],
-            ['✈️', '📸', '🌍'],
-            ['📚', '☕', '🤓'],
-            ['🔥', '😎', '👑'],
-            ['🍔', '🍟', '🥤'],
-            ['🎨', '🖌️', '🌈'],
-            ['💻', '⚡', '🚀']
+        // --- TES TRIOS D'EMOJIS ---
+        const collections = [
+            ['🎨', '👩‍🎨', '🌈'],
+            ['🍕', '🍷', '😋'],
+            ['🎮', '🎧', '⚡'],
+            ['✈️', '🌍', '📸'],
+            ['🎂', '🎁', '🥳'],
+            ['🐱', '🧶', '💖'],
+            ['📖', '☕', '🕯️'],
+            ['🏃‍♀️', '🔥', '💪']
         ];
 
-        const ribbon = document.getElementById('ribbon');
-        const btn = document.getElementById('spinBtn');
-        const trioWidth = 260; // Doit correspondre à --trio-width
+        const reels = [
+            document.getElementById('reel1'),
+            document.getElementById('reel2'),
+            document.getElementById('reel3')
+        ];
+        
+        let dernierIndex = -1;
 
-        // On remplit le ruban avec beaucoup de trios pour l'effet de défilement
-        function init() {
-            // On répète la liste pour avoir de la longueur
-            const fullList = [...mesTrios, ...mesTrios, ...mesTrios, ...mesTrios, ...mesTrios];
-            
-            fullList.forEach(trio => {
-                const div = document.createElement('div');
-                div.className = 'trio';
-                div.innerHTML = `<span>${trio[0]}</span><span>${trio[1]}</span><span>${trio[2]}</span>`;
-                ribbon.appendChild(div);
+        // Préparation initiale des colonnes
+        function initialiser() {
+            reels.forEach(reel => {
+                reel.innerHTML = '<div class="emoji-item">✨</div>';
             });
         }
 
-        let currentPosition = 0;
-
-        function startScroll() {
+        function lancerDefilement() {
+            const btn = document.getElementById('spinBtn');
             btn.disabled = true;
 
-            // On choisit un index au hasard (pas trop au début pour que ça défile bien)
-            const randomIndex = Math.floor(Math.random() * (mesTrios.length * 2)) + mesTrios.length;
+            // 1. Choisir un nouveau trio au hasard (différent du précédent)
+            let index;
+            do {
+                index = Math.floor(Math.random() * collections.length);
+            } while (index === dernierIndex);
+            dernierIndex = index;
             
-            // Calcul du décalage (chaque index décale d'une largeur de trio)
-            const offset = randomIndex * trioWidth;
-            
-            // Animation du ruban
-            ribbon.style.transform = `translateX(-${offset}px)`;
+            const trioGagnant = collections[index];
 
-            // Réinitialisation après l'animation pour pouvoir recommencer
-            setTimeout(() => {
-                btn.disabled = false;
-            }, 3000);
+            // 2. Lancer l'animation pour chaque colonne
+            reels.forEach((reel, i) => {
+                // On remplit la colonne avec plein d'emojis pour l'effet de vitesse
+                let content = '';
+                for(let j=0; j<10; j++) {
+                    content += `<div class="emoji-item">${collections[Math.floor(Math.random()*collections.length)][i]}</div>`;
+                }
+                // On finit par l'emoji final
+                content += `<div class="emoji-item">${trioGagnant[i]}</div>`;
+                reel.innerHTML = content;
+                
+                // On ajoute la classe d'animation
+                reel.classList.add('spinning');
+            });
+
+            // 3. Arrêt séquentiel (l'un après l'autre)
+            reels.forEach((reel, i) => {
+                setTimeout(() => {
+                    reel.classList.remove('spinning');
+                    // On place le ruban tout en bas sur le dernier emoji
+                    const offset = (reel.children.length - 1) * 100;
+                    reel.style.top = `-${offset}px`;
+
+                    // Si c'est le dernier emoji, on réactive le bouton
+                    if (i === 2) {
+                        setTimeout(() => { btn.disabled = false; }, 500);
+                    }
+                }, 1000 + (i * 600)); // 1s pour le premier, 1.6s pour le 2e, 2.2s pour le 3e
+            });
         }
 
-        init();
+        initialiser();
     </script>
 </body>
 </html>
